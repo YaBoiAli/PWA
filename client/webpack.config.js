@@ -16,25 +16,39 @@ module.exports = () => {
       path: path.resolve(__dirname, 'dist'),
     },
     plugins: [
+      // Webpack plugin that generates our html file and injects our bundles. 
       new HtmlWebpackPlugin({
-        template: './src/index.html',
+        template: './index.html',
+        title: 'Contact Cards'
       }),
+     
+      // Injects our custom service worker
+      new InjectManifest({
+        swSrc: './src-sw.js',
+        swDest: 'src-sw.js',
+      }),
+
+      // Creates a manifest.json file.
       new WebpackPwaManifest({
-        name: 'My App',
-        short_name: 'App',
-        description: 'My Progressive Web App',
-        start_url: '/',
-        background_color: '#ffffff',
-        theme_color: '#000000',
+        fingerprints: false,
+        inject: true,
+        name: 'Contact Cards',
+        short_name: 'Contact',
+        description: 'Never forget your contacts!',
+        background_color: '#225ca3',
+        theme_color: '#225ca3',
+        start_url: './',
+        publicPath: './',
         icons: [
-          // Add icon configurations here
+          {
+            src: path.resolve('src/images/logo.png'),
+            sizes: [96, 128, 192, 256, 384, 512],
+            destination: path.join('assets', 'icons'),
+          },
         ],
       }),
-      new WorkboxPlugin.InjectManifest({
-        swSrc: './src/service-worker.js',
-        swDest: 'service-worker.js',
-      }),
     ],
+
     module: {
       rules: [
         {
